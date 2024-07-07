@@ -1,6 +1,6 @@
 pipelineJob('DSL_Pipeline') {
 
-  def repo = 'https://github.com/path/to/your/repo.git'
+  def repo = 'https://github.com/steppedaxis/docker-cicd.git'
 
   triggers {
     scm('H/5 * * * *')
