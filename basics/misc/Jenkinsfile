@@ -1,5 +1,7 @@
 node {
    def commit_id
+   def docker_login = 'nirrea839'
+   def docker_image = 'nirrea839/docker-nodejs-demo'
    stage('step pre') {
      checkout scm
      sh "git rev-parse --short HEAD > .git/commit-id"                        
@@ -14,16 +16,14 @@ node {
      }
    }
    stage('docker build/push') {
-     docker.withRegistry('https://index.docker.io/v1/', 'nirrea839') {
-       def app = docker.build("nirrea839/docker-nodejs-demo:${commit_id}", '.').push()
+     docker.withRegistry('https://index.docker.io/v1/', "${docker_login}") {
+       def app = docker.build("${docker_image}:${commit_id}", '.').push()
      }
    }
    stage('docker run') {
-     sh label: '', script: '''
-      docker run --rm -tid --name docker_test -p 3000 nirrea839/docker-nodejs-demo:latest
-      docker kill docker_test
       
-      '''
+      sh "docker run --rm -tid --name docker_test -p 3000 ${docker_image}:${commit_id}"
+      sh 'docker kill docker_test'
+      
      }
    }
-
